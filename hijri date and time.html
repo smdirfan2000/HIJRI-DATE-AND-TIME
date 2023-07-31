@@ -18,8 +18,15 @@
       // Convert the Saudi Arabia date to Indian time zone
       var indianDate = new Date(saudiArabiaDate.getTime() + timeDifference);
 
-      // Adjust the Indian Hijri date to be one day earlier
-      indianDate.setDate(indianDate.getDate() - 1);
+      // Check if the current time is after 6:30 PM in Indian time zone
+      var currentHour = indianDate.getHours();
+      var currentMinute = indianDate.getMinutes();
+      var isAfter6_30PM = currentHour > 18 || (currentHour === 18 && currentMinute >= 30);
+
+      // Adjust the Indian Hijri date to be one day earlier if it's after 6:30 PM
+      if (isAfter6_30PM) {
+        indianDate.setDate(indianDate.getDate() - 1);
+      }
 
       // Hijri date in Indian time zone
       var hijriOptions = { day: 'numeric', month: 'numeric', year: 'numeric', calendar: 'islamic-umalqura' };
@@ -35,7 +42,7 @@
       var gregorianMonth = ('0' + (date.getMonth() + 1)).slice(-2);
       var gregorianYear = date.getFullYear();
 
-      var dateTimeString = 'Today Hijri Date: ' + indianHijriDate.replace(/ AH| BC/g, '') + ' AH '+ ' | Time: ' + timeString + ' | Today Date: ' + gregorianDay + '-' + gregorianMonth + '-' + gregorianYear;
+      var dateTimeString = 'Today Hijri Date: ' + indianHijriDate.replace(/ AH| BC/g, '') + ' AH ' + ' | Time: ' + timeString + ' | Today Date: ' + gregorianDay + '-' + gregorianMonth + '-' + gregorianYear;
       var dateTimeElement = document.getElementById('date-time');
       dateTimeElement.innerText = dateTimeString;
     }
