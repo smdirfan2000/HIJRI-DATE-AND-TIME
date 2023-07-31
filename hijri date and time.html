@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <div class="date-time" id="date-time"></div>
+
+  <script>
+    function getCurrentDateTime() {
+      var date = new Date();
+
+      // Convert the current date to Saudi Arabia time zone
+      var saudiArabiaTimezoneOffset = 3; // Saudi Arabia is in UTC+3 time zone
+      var saudiArabiaDate = new Date(date.getTime() + saudiArabiaTimezoneOffset * 60 * 60 * 1000);
+
+      // Calculate the time difference between Saudi Arabia and India
+      var indiaTimezoneOffset = 5.5; // India is in UTC+5:30 time zone
+      var timeDifference = (indiaTimezoneOffset - saudiArabiaTimezoneOffset) * 60 * 60 * 1000;
+
+      // Convert the Saudi Arabia date to Indian time zone
+      var indianDate = new Date(saudiArabiaDate.getTime() + timeDifference);
+
+      // Adjust the Indian Hijri date to be one day earlier
+      indianDate.setDate(indianDate.getDate() - 1);
+
+      // Hijri date in Indian time zone
+      var hijriOptions = { day: 'numeric', month: 'numeric', year: 'numeric', calendar: 'islamic-umalqura' };
+      var hijriFormatter = new Intl.DateTimeFormat('en-IN-u-ca-islamic', hijriOptions);
+      var indianHijriDate = hijriFormatter.format(indianDate);
+
+      // Time with seconds and AM/PM
+      var hours = date.getHours();
+      var timeString = ('0' + (hours % 12 || 12)).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2) + ' ' + (hours < 12 ? 'AM' : 'PM');
+
+      // Gregorian date
+      var gregorianDay = ('0' + date.getDate()).slice(-2);
+      var gregorianMonth = ('0' + (date.getMonth() + 1)).slice(-2);
+      var gregorianYear = date.getFullYear();
+
+      var dateTimeString = 'Today Hijri Date: ' + indianHijriDate.replace(/ AH| BC/g, '') + ' AH '+ ' | Time: ' + timeString + ' | Today Date: ' + gregorianDay + '-' + gregorianMonth + '-' + gregorianYear;
+      var dateTimeElement = document.getElementById('date-time');
+      dateTimeElement.innerText = dateTimeString;
+    }
+
+    getCurrentDateTime();
+    setInterval(getCurrentDateTime, 1000); // Update every second
+
+    // Re-calculate and update display on window resize
+    window.addEventListener('resize', getCurrentDateTime);
+  </script>
+
+  <style>
+    .date-time {
+      font-size: 2em;
+      font-weight: bold;
+      background-color: black;
+      color: white;
+      border: 2px solid white;
+      border-radius: 10px;
+      padding: 10px;
+    }
+  </style>
+</body>
+</html>
